@@ -131,7 +131,7 @@ const DEFAULTS = {
   fallbacks: ['', ''], // backup models, in order, for when the default hits its usage limit (limits.mjs)
   efforts: {}, // how hard each model slot thinks: default, each heavy job, backup1, backup2 ('' = automatic, 'off', or a level)
   notch: 'off', // where I appear: 'off' (beside the cursor, default), 'drop' (the capsule) or 'spread' (a Mac's notch; see notchMode)
-  onboarded: false, onboardStep: 0, filesAsked: false, keys: DEFAULT_KEYS, muteWhileTalking: true, volume: 100, autoListen: false, listenEvery: false, listenSecs: 8, lite: false, wakeWord: false, setupVersion: 0, size: 'default', look: 'classic', introDone: false,
+  onboarded: false, onboardStep: 0, filesAsked: false, keys: DEFAULT_KEYS, muteWhileTalking: true, volume: 100, autoListen: false, listenEvery: false, listenSecs: 8, lite: false, wakeWord: true, setupVersion: 0, size: 'default', look: 'classic', introDone: false,
   replies: 'text', // 'voice': spoken (with Fish Audio or Gemini) as well as shown
   speechLang: 'auto', // the language talking is recognised in (macOS): 'auto' follows the Mac's language list, or a locale like 'ar-SA'
   tts: 'fish', // which one speaks: 'fish' (Fish Audio), 'gemini' or 'voicestudio' (the VoiceStudio app on this computer)
@@ -3094,6 +3094,10 @@ midnightClean();
 setTimeout(() => checkUpdates(), 20_000);
 setInterval(() => checkUpdates(), 6 * 3600_000);
 voiceConfig();
+// A wake-word-enabled computer should be listening after launch, not wait for the user to open the
+// Listening page or press a key. Windows and Linux download the on-device Parakeet model once when it
+// is missing; macOS uses its built-in speech recognizer and has no model download.
+if (NEEDS_MODEL && config.voice && config.wakeWord && !voiceReady()) getVoiceModel();
 // First run (or setup never finished): open the guide.
 // v2 added the "Control apps" (Accessibility) permission: people who finished setup before that
 // get the guide once more, on the permissions step.

@@ -5,7 +5,11 @@ import fs from 'node:fs';
 import http from 'node:http';
 import os from 'node:os';
 import path from 'node:path';
-import { downloadModel, isReady, totalBytes } from '../voicemodel.mjs';
+import { MODEL, downloadModel, isReady, totalBytes } from '../voicemodel.mjs';
+
+assert.equal(MODEL.id, 'parakeet-tdt-0.6b-v3-int8');
+assert.equal(MODEL.files.length, 3);
+assert.ok(MODEL.base.includes('parakeet-tdt-0.6b-v3-onnx'));
 
 const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'roamies-model-test-'));
 process.on('exit', () => fs.rmSync(TMP, { recursive: true, force: true }));
